@@ -1,0 +1,171 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DemoStatus {
+  DRAFT
+  READY
+  CALLING
+  COMPLETED
+  EXPIRED
+  FAILED
+}
+
+enum CallStatus {
+  INITIATED
+  RINGING
+  CONNECTED
+  FAILED
+  COMPLETED
+}
+
+model DemoSession {
+  id              String       @id @default(cuid())
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  status          DemoStatus   @default(DRAFT)
+  ttlExpiresAt    DateTime
+  provider        String
+  providerAgentId String?
+  sourceIpHash    String?
+  requestId       String?
+
+  lead            Lead?
+  businessContext BusinessContext?
+  businessProfile BusinessProfile?
+  calls           Call[]
+  candidatePlaces CandidatePlace[]
+
+  @@index([status])
+  @@index([ttlExpiresAt])
+}
+
+model Lead {
+  id            String       @id @default(cuid())
+  demoSessionId String       @unique
+  createdAt     DateTime     @default(now())
+  name          String?
+  email         String?
+  phoneE164     String
+  consent       Boolean      @default(false)
+
+  DemoSession   DemoSession  @relation(fields: [demoSessionId], references: [id], onDelete: Cascade)
+
+  @@index([phoneE164])
+}
+
+model BusinessContext {
+  id            String       @id @default(cuid())
+  demoSessionId String       @unique
+  placeId       String
+  name          String
+  address       String
+  website       String?
+  phone         String?
+  types         String[]
+  rating        Float?
+  userRatings   Int?
+  hoursJson     Json?
+  reviewsSample Json?
+  geoLat        Float?
+  geoLng        Float?
+
+  DemoSession   DemoSession  @relation(fields: [demoSessionId], references: [id], onDelete: Cascade)
+
+  @@index([placeId])
+}
+
+model BusinessProfile {
+  id            String      @id @default(cuid())
+  demoSessionId String      @unique
+  createdAt     DateTime    @default(now())
+  json          Json
+
+  DemoSession   DemoSession @relation(fields: [demoSessionId], references: [id], onDelete: Cascade)
+}
+
+model Call {
+  id             String      @id @default(cuid())
+  demoSessionId  String
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  provider       String
+  providerCallId String
+  status         CallStatus  @default(INITIATED)
+  startedAt      DateTime?
+  connectedAt    DateTime?
+  endedAt        DateTime?
+  durationSec    Int?
+  summary        String?
+  transcriptUrl  String?
+  rawMeta        Json?
+
+  DemoSession    DemoSession @relation(fields: [demoSessionId], references: [id], onDelete: Cascade)
+  webhookEvents  WebhookEvent[]
+  booking        Booking?
+
+  @@unique([provider, providerCallId])
+  @@index([demoSessionId])
+  @@index([status])
+}
+
+model WebhookEvent {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  callId      String
+  provider    String
+  eventType   String
+  dedupeKey   String?
+  rawPayload  Json
+  processedAt DateTime?
+
+  Call        Call     @relation(fields: [callId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, dedupeKey])
+  @@index([eventType])
+}
+
+model Booking {
+  id         String      @id @default(cuid())
+  callId     String      @unique
+  createdAt  DateTime    @default(now())
+  status     String      @default("confirmed")
+  start      DateTime
+  end        DateTime
+  location   String?
+  reference  String?
+  notes      String?
+
+  Call       Call        @relation(fields: [callId], references: [id], onDelete: Cascade)
+}
+
+model CandidatePlace {
+  id            String       @id @default(cuid())
+  demoSessionId String
+  rank          Int
+  placeId       String
+  name          String
+  address       String
+  website       String?
+  phone         String?
+  types         String[]
+  rating        Float?
+  userRatings   Int?
+
+  DemoSession   DemoSession  @relation(fields: [demoSessionId], references: [id], onDelete: Cascade)
+
+  @@index([demoSessionId])
+  @@index([placeId])
+}
+
+
+
+
+
+
+

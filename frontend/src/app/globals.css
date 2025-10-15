@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-yellow hover:bg-yellow-400 text-brand-blue-600 font-medium px-6 py-3 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+  
+  .btn-secondary {
+    @apply bg-white border border-brand-teal-100 hover:border-brand-teal-200 text-brand-blue-600 font-medium px-6 py-3 rounded-lg transition-all duration-200;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-card border border-gray-100;
+  }
+  
+  .progress-bar {
+    @apply w-full bg-gray-200 rounded-full h-2 overflow-hidden;
+  }
+  
+  .progress-fill {
+    @apply h-full bg-brand-teal-100 rounded-full transition-all duration-300;
+  }
+  
+  
+  .feature-item {
+    @apply flex items-start space-x-3 p-4 rounded-lg hover:bg-gray-50 transition-colors duration-200;
+  }
+  
+  .business-card {
+    @apply p-4 border border-gray-200 rounded-lg hover:border-brand-teal-100 hover:shadow-md transition-all duration-200 cursor-pointer;
+  }
+  
+  .business-card.selected {
+    @apply border-brand-teal-100 bg-teal-50;
+  }
+
+  .brand-gradient {
+    background: linear-gradient(135deg, #20B2AA 0%, #191970 100%);
+  }
+}
