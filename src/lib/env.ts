@@ -29,7 +29,7 @@ export const envSchema = z.object({
   SLACK_WEBHOOK_URL: z.string().optional().transform(val => val === '' ? undefined : val).pipe(z.string().url().optional()),
   DEMO_TTL_HOURS: z.coerce.number().default(24),
   
-  DATABASE_URL: z.string().url(),
+  DATABASE_URL: z.string().url().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
