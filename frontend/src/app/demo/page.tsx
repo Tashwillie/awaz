@@ -9,6 +9,7 @@ import { Logo } from '@/components/ui/Logo'
 import { StepHeader } from '@/components/demo/StepHeader'
 import { FeatureList } from '@/components/demo/FeatureList'
 import { BusinessCard, Business } from '@/components/demo/BusinessCard'
+import { AnimatedTrainingFlow } from '@/components/demo/AnimatedTrainingFlow'
 import { Search, MapPin, Clock, GraduationCap, Speaker, Trophy, Check, Phone } from 'lucide-react'
 import { searchPlaces, createDemoSession, confirmDemo, startVoiceCall } from '@/lib/api'
 import { loginWithGoogle, loginWithEmail } from '@/lib/auth'
@@ -353,39 +354,11 @@ export default function DemoPage() {
   )
 
   const renderStep3 = () => (
-    <div className="grid md:grid-cols-2 gap-12">
-      {/* Left - Building copy */}
-      <div className="space-y-6">
-        <h1 className="text-4xl font-semibold text-gray-900 leading-tight">
-          Building your <span className="text-brand-teal-100">Funnder Agent</span>
-        </h1>
-        <FeatureList
-          features={[
-            { icon: <GraduationCap className="w-6 h-6" />, text: 'Funnder is scanning your website and available data.' },
-            { icon: <Trophy className="w-6 h-6" />, text: 'Your custom AI agent is being tailored to your business.' },
-            { icon: <Speaker className="w-6 h-6" />, text: 'Sample clips are being generated for you.' },
-          ]}
-        />
-      </div>
-
-      {/* Right - Progress */}
-      <div className="space-y-6">
-        <h3 className="text-xl font-semibold text-gray-900">Funnder is training on your data</h3>
-        <div className="w-full h-3 bg-gray-200 rounded-full">
-          <div className="h-3 bg-brand-teal-100 rounded-full" style={{ width: '70%' }} />
-        </div>
-        <ul className="space-y-4 text-gray-700">
-          <li>Analyzing your website for data.</li>
-          <li>Processing your business information.</li>
-          <li>Optimizing your data for AI.</li>
-          <li className="opacity-70">Generating your custom Funnder agent.</li>
-        </ul>
-        {/* Temporary developer control to proceed */}
-        <Button variant="outline" onClick={() => setCurrentStep(4)}>
-          Skip to Preview (temp)
-        </Button>
-      </div>
-    </div>
+    <AnimatedTrainingFlow 
+      onComplete={() => setCurrentStep(4)}
+      businessName={selectedBusiness?.name}
+      websiteUrl={selectedBusiness?.website}
+    />
   )
 
   const renderStep4 = () => (
