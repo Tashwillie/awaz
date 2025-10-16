@@ -1,5 +1,14 @@
 name: CI/CD Pipeline
 
+# Required GitHub Secrets:
+# - VERCEL_TOKEN: Your Vercel API token (get from https://vercel.com/account/tokens)
+# - VERCEL_SCOPE: Your Vercel team/organization scope
+#
+# To configure secrets:
+# 1. Go to your GitHub repository
+# 2. Navigate to Settings > Secrets and variables > Actions
+# 3. Add the required secrets
+
 on:
   push:
     branches: [ main, develop ]
@@ -88,11 +97,52 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'pnpm'
+    
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10
+    
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+    
+    - name: Install Vercel CLI
+      run: npm install -g vercel
+    
+    - name: Check Vercel configuration
+      run: |
+        if [ -z "$VERCEL_TOKEN" ]; then
+          echo "Error: VERCEL_TOKEN secret is not configured"
+          exit 1
+        fi
+        if [ -z "$VERCEL_SCOPE" ]; then
+          echo "Error: VERCEL_SCOPE secret is not configured"
+          exit 1
+        fi
+        echo "Vercel configuration verified"
+      env:
+        # Note: These secrets need to be configured in GitHub repository settings
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_SCOPE: ${{ secrets.VERCEL_SCOPE }}
+    
     - name: Deploy to staging
       run: |
         echo "Deploying to staging environment"
-        # Add your staging deployment commands here
-        # Example: vercel --token ${{ secrets.VERCEL_TOKEN }} --scope ${{ secrets.VERCEL_SCOPE }}
+        if [ -n "$VERCEL_TOKEN" ] && [ -n "$VERCEL_SCOPE" ]; then
+          vercel --token $VERCEL_TOKEN --scope $VERCEL_SCOPE --yes
+        else
+          echo "Warning: VERCEL_TOKEN or VERCEL_SCOPE not configured. Skipping deployment."
+          echo "Please configure these secrets in your GitHub repository settings."
+        fi
+      env:
+        # Note: These secrets need to be configured in GitHub repository settings
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_SCOPE: ${{ secrets.VERCEL_SCOPE }}
 
   deploy-production:
     if: github.ref == 'refs/heads/main'
@@ -103,8 +153,49 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'pnpm'
+    
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10
+    
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+    
+    - name: Install Vercel CLI
+      run: npm install -g vercel
+    
+    - name: Check Vercel configuration
+      run: |
+        if [ -z "$VERCEL_TOKEN" ]; then
+          echo "Error: VERCEL_TOKEN secret is not configured"
+          exit 1
+        fi
+        if [ -z "$VERCEL_SCOPE" ]; then
+          echo "Error: VERCEL_SCOPE secret is not configured"
+          exit 1
+        fi
+        echo "Vercel configuration verified"
+      env:
+        # Note: These secrets need to be configured in GitHub repository settings
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_SCOPE: ${{ secrets.VERCEL_SCOPE }}
+    
     - name: Deploy to production
       run: |
         echo "Deploying to production environment"
-        # Add your production deployment commands here
-        # Example: vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --scope ${{ secrets.VERCEL_SCOPE }}
+        if [ -n "$VERCEL_TOKEN" ] && [ -n "$VERCEL_SCOPE" ]; then
+          vercel --prod --token $VERCEL_TOKEN --scope $VERCEL_SCOPE --yes
+        else
+          echo "Warning: VERCEL_TOKEN or VERCEL_SCOPE not configured. Skipping deployment."
+          echo "Please configure these secrets in your GitHub repository settings."
+        fi
+      env:
+        # Note: These secrets need to be configured in GitHub repository settings
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_SCOPE: ${{ secrets.VERCEL_SCOPE }}

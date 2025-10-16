@@ -16,7 +16,7 @@ const STEPS = [
 ]
 
 export default function DashboardPage() {
-  const { data: session, status } = useAuthSession()
+  const { status } = useAuthSession()
   const {
     currentStep,
     setCurrentStep,
