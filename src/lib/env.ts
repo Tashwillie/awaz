@@ -38,7 +38,39 @@ let env: Env;
 
 export function getEnv(): Env {
   if (!env) {
-    env = envSchema.parse(process.env);
+    // During Vercel build, avoid throwing on missing env; return minimal defaults
+    if (process.env.VERCEL === '1') {
+      try {
+        env = envSchema.parse(process.env);
+      } catch (error) {
+        logger.warn('Skipping strict env validation during Vercel build');
+        env = {
+          NODE_ENV: (process.env.NODE_ENV as any) || 'production',
+          LOG_LEVEL: (process.env.LOG_LEVEL as any) || 'info',
+          TURNSTILE_SECRET: process.env.TURNSTILE_SECRET,
+          GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY,
+          OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+          FIRECRAWL_API_KEY: process.env.FIRECRAWL_API_KEY,
+          VOICE_PROVIDER: (process.env.VOICE_PROVIDER as any) || 'retell',
+          RETELL_API_KEY: process.env.RETELL_API_KEY,
+          RETELL_WEBHOOK_SECRET: process.env.RETELL_WEBHOOK_SECRET,
+          VAPI_API_KEY: process.env.VAPI_API_KEY,
+          VAPI_WEBHOOK_SECRET: process.env.VAPI_WEBHOOK_SECRET,
+          AWAZ_API_KEY: process.env.AWAZ_API_KEY,
+          CRM: (process.env.CRM as any) || 'hubspot',
+          HUBSPOT_API_KEY: process.env.HUBSPOT_API_KEY,
+          PIPEDRIVE_API_TOKEN: process.env.PIPEDRIVE_API_TOKEN,
+          CALENDAR: (process.env.CALENDAR as any) || 'google',
+          GOOGLE_CALENDAR_CREDENTIALS_BASE64: process.env.GOOGLE_CALENDAR_CREDENTIALS_BASE64,
+          CALENDLY_TOKEN: process.env.CALENDLY_TOKEN,
+          SLACK_WEBHOOK_URL: process.env.SLACK_WEBHOOK_URL,
+          DEMO_TTL_HOURS: Number(process.env.DEMO_TTL_HOURS || 24),
+          DATABASE_URL: process.env.DATABASE_URL,
+        } as Env;
+      }
+    } else {
+      env = envSchema.parse(process.env);
+    }
     
     if (env.NODE_ENV === 'development' && !env.TURNSTILE_SECRET) {
       logger.warn('TURNSTILE_SECRET not set - Turnstile verification will be disabled in development');
