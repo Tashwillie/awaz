@@ -10,6 +10,7 @@ import { StepHeader } from '@/components/demo/StepHeader'
 import { FeatureList } from '@/components/demo/FeatureList'
 import { BusinessCard, Business } from '@/components/demo/BusinessCard'
 import { AnimatedTrainingFlow } from '@/components/demo/AnimatedTrainingFlow'
+import { VoicePlayer } from '@/components/demo/VoicePlayer'
 import { Search, MapPin, Clock, GraduationCap, Speaker, Trophy, Check, Phone } from 'lucide-react'
 import { searchPlaces, createDemoSession, confirmDemo, startVoiceCall } from '@/lib/api'
 import { loginWithGoogle, loginWithEmail } from '@/lib/auth'
@@ -366,7 +367,7 @@ export default function DemoPage() {
       {/* Left - Preview */}
       <div className="space-y-6">
         <h1 className="text-4xl font-semibold text-gray-900 leading-tight">
-          <span className="text-brand-teal-100">Preview</span> {selectedBusiness?.name}'s Custom Agent
+          <span className="text-brand-teal-100">Preview</span> {selectedBusiness?.name}&apos;s Custom Agent
         </h1>
         <FeatureList
           features={[
@@ -379,24 +380,20 @@ export default function DemoPage() {
 
       {/* Right - Samples & CTA */}
       <div className="space-y-6">
-        <h3 className="text-xl font-semibold text-gray-900">Listen to a few examples below…</h3>
+        <h3 className="text-xl font-semibold text-gray-900">Listen to a few examples below&hellip;</h3>
         <div className="space-y-3">
-          <div className="p-4 border border-gray-200 rounded-lg bg-gray-50">
-            <div className="flex items-center space-x-3">
-              <button className="w-10 h-10 bg-brand-teal-100 rounded-full flex items-center justify-center">
-                <div className="w-0 h-0 border-l-[6px] border-l-white border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent ml-1" />
-              </button>
-              <div className="flex-1"><p className="font-medium text-gray-900">Greeting</p></div>
-            </div>
-          </div>
-          <div className="p-4 border border-gray-200 rounded-lg bg-gray-50">
-            <div className="flex items-center space-x-3">
-              <button className="w-10 h-10 bg-brand-teal-100 rounded-full flex items-center justify-center">
-                <div className="w-0 h-0 border-l-[6px] border-l-white border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent ml-1" />
-              </button>
-              <div className="flex-1"><p className="font-medium text-gray-900">Message</p></div>
-            </div>
-          </div>
+          <VoicePlayer
+            title="Greeting"
+            text=""
+            voiceType="greeting"
+            businessName={selectedBusiness?.name}
+          />
+          <VoicePlayer
+            title="Message"
+            text=""
+            voiceType="message"
+            businessName={selectedBusiness?.name}
+          />
         </div>
         <div className="space-y-3">
           <Button className="w-full" size="lg" onClick={() => { loginWithGoogle() }}>
