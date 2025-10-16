@@ -64,7 +64,13 @@ export function VoicePlayer({
       }
     } catch (err) {
       console.error('Voice generation error:', err)
-      setError('Failed to generate voice. Please try again.')
+      
+      // Check if it's an API key issue
+      if (err instanceof Error && err.message.includes('API key not configured')) {
+        setError('OpenAI API key not configured. Please set OPENAI_API_KEY in your .env.local file.')
+      } else {
+        setError('Failed to generate voice. Please check your OpenAI API key and try again.')
+      }
     } finally {
       setIsLoading(false)
     }
