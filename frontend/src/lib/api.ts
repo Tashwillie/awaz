@@ -1,6 +1,6 @@
 import { Business, DemoSession, BusinessProfile, Call } from '@/types/demo'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
 class ApiError extends Error {
   constructor(
@@ -128,8 +128,13 @@ export async function getDemoStatus(sessionId: string): Promise<{
   businessProfile?: BusinessProfile
   call?: Call
 }> {
-  const data = await apiRequest(`/api/demo/status/${sessionId}`)
-  return data
+  const data = await apiRequest(`/api/demo/status/${sessionId}`)        
+  return data as {
+    status: string
+    callStatus?: string
+    businessProfile?: BusinessProfile
+    call?: Call
+  }
 }
 
 // Health check
@@ -140,5 +145,10 @@ export async function healthCheck(): Promise<{
   requestId: string
 }> {
   const data = await apiRequest('/api/health')
-  return data
+  return data as {
+    ok: boolean
+    version: string
+    timestamp: string
+    requestId: string
+  }
 }

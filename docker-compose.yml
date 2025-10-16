@@ -4,7 +4,7 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"
+      - "3001:3001"
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/funnder_prod
@@ -27,9 +27,9 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3001:3000"
+      - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:3000
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
     depends_on:
       - app
 
