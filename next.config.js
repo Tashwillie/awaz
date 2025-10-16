@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ['@prisma/client'],
+  output: 'standalone',
   eslint: {
     // Unblock builds in dev/CI when eslint plugins are missing
     ignoreDuringBuilds: true,
