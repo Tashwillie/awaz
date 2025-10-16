@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { PrismaClient } from '@prisma/client';
+let prismaSingleton: any | null = null;
+async function getPrisma() {
+  if (!prismaSingleton) {
+    const { PrismaClient } = await import('@prisma/client');
+    prismaSingleton = new PrismaClient();
+  }
+  return prismaSingleton as import('@prisma/client').PrismaClient;
+}
 import { getActiveProvider } from '@/services/providers/voice/register';
 import { logger } from '@/lib/logger';
 import { BadRequestError } from '@/lib/errors';
 import { getEnv } from '@/lib/env';
 
-const prisma = new PrismaClient();
 
 const receiveCallSchema: z.ZodType = z.object({
   sessionId: z.string(),

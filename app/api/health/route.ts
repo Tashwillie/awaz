@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import packageJson from '../../../package.json';
+// Avoid importing package.json at build-time via ESM; instead inline version or use env
+const version = process.env.npm_package_version || '0.1.0';
 
 export async function GET() {
   const requestId = crypto.randomUUID();
@@ -10,7 +11,7 @@ export async function GET() {
   
   return NextResponse.json({
     ok: true,
-    version: packageJson.version,
+    version,
     timestamp: new Date().toISOString(),
     requestId,
   });

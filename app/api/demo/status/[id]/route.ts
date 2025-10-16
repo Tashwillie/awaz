@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+let prismaSingleton: any | null = null;
+async function getPrisma() {
+  if (!prismaSingleton) {
+    const { PrismaClient } = await import('@prisma/client');
+    prismaSingleton = new PrismaClient();
+  }
+  return prismaSingleton as import('@prisma/client').PrismaClient;
+}
 import { logger } from '@/lib/logger';
 
-const prisma = new PrismaClient();
 
 export async function GET(
   request: NextRequest,

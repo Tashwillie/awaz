@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { PrismaClient } from '@prisma/client';
+let prismaSingleton: any | null = null;
+async function getPrisma() {
+  if (!prismaSingleton) {
+    const { PrismaClient } = await import('@prisma/client');
+    prismaSingleton = new PrismaClient();
+  }
+  return prismaSingleton as import('@prisma/client').PrismaClient;
+}
 import { getEnv } from '@/lib/env';
 import { logger } from '@/lib/logger';
 import { BadRequestError } from '@/lib/errors';
 
-const prisma = new PrismaClient();
 
 const startSchema = z.object({
   placeId: z.string().optional(),

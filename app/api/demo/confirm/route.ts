@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { PrismaClient } from '@prisma/client';
+// Lazily load PrismaClient at runtime to avoid touching it during build
+let prismaSingleton: any | null = null;
+async function getPrisma() {
+  if (!prismaSingleton) {
+    const { PrismaClient } = await import('@prisma/client');
+    prismaSingleton = new PrismaClient();
+  }
+  return prismaSingleton as import('@prisma/client').PrismaClient;
+}
 import { PlacesService } from '@/services/places.service';
 import { ProfileBuilderService } from '@/services/profile-builder.service';
 import { logger } from '@/lib/logger';
 import { BadRequestError } from '@/lib/errors';
 
-const prisma = new PrismaClient();
+// Access via getPrisma() inside handlers
 
 const confirmSchema = z.object({
   sessionId: z.string(),

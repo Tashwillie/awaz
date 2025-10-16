@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+let prismaSingleton: any | null = null;
+async function getPrisma() {
+  if (!prismaSingleton) {
+    const { PrismaClient } = await import('@prisma/client');
+    prismaSingleton = new PrismaClient();
+  }
+  return prismaSingleton as import('@prisma/client').PrismaClient;
+}
 import { getActiveProvider } from '@/services/providers/voice/register';
 import { logger } from '@/lib/logger';
 import { ProviderError } from '@/lib/errors';
 import { ProviderEventSchema } from '@/types/webhook';
 import { getEnv } from '@/lib/env';
 
-const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   const requestId = crypto.randomUUID();

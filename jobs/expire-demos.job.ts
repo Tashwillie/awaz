@@ -1,13 +1,21 @@
 import cron from 'node-cron';
-import { PrismaClient } from '@prisma/client';
 import { logger } from '@/lib/logger';
 
-const prisma = new PrismaClient();
+// Lazily create Prisma client only when functions run at runtime
+let prismaSingleton: any | null = null;
+async function getPrisma() {
+  if (!prismaSingleton) {
+    const { PrismaClient } = await import('@prisma/client');
+    prismaSingleton = new PrismaClient();
+  }
+  return prismaSingleton as import('@prisma/client').PrismaClient;
+}
 
 export async function expireDemos(): Promise<void> {
   logger.info('Starting demo expiry job');
   
   try {
+    const prisma = await getPrisma();
     const now = new Date();
     
     const expiredSessions = await prisma.demoSession.findMany({
@@ -58,18 +66,6 @@ export function startExpiryJob(): void {
   });
   
   logger.info('Expiry job scheduled to run hourly');
-}
-
-if (require.main === module) {
-  expireDemos()
-    .then(() => {
-      logger.info('Expiry job completed');
-      process.exit(0);
-    })
-    .catch((error) => {
-      logger.error('Expiry job failed', { error: error.message });
-      process.exit(1);
-    });
 }
 
 
