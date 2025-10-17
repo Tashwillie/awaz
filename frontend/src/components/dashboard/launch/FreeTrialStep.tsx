@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { CreditCard, Loader2 } from 'lucide-react'
 import { getBillingInfo, addPaymentMethod } from '@/lib/dashboard-api'
 
@@ -9,7 +9,7 @@ interface FreeTrialStepProps {
 }
 
 export function FreeTrialStep({ sessionId }: FreeTrialStepProps) {
-  const [billingInfo, setBillingInfo] = useState<any>(null)
+  const [billingInfo, setBillingInfo] = useState<Record<string, unknown> | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -17,9 +17,9 @@ export function FreeTrialStep({ sessionId }: FreeTrialStepProps) {
     if (sessionId) {
       loadBillingInfo()
     }
-  }, [sessionId])
+  }, [sessionId, loadBillingInfo])
 
-  const loadBillingInfo = async () => {
+  const loadBillingInfo = useCallback(async () => {
     if (!sessionId) return
     
     try {
@@ -32,7 +32,7 @@ export function FreeTrialStep({ sessionId }: FreeTrialStepProps) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [sessionId])
 
   const handleAddPaymentMethod = async () => {
     if (!sessionId) return
@@ -97,7 +97,7 @@ export function FreeTrialStep({ sessionId }: FreeTrialStepProps) {
         <div>
           <div className="text-sm text-gray-700 mb-2">Add your Credit Card</div>
           <p className="text-sm text-gray-600">
-            Start trial to allow external calls by adding a credit card. You won't be 
+            Start trial to allow external calls by adding a credit card. You won&apos;t be 
             charged until trial is complete.
           </p>
         </div>

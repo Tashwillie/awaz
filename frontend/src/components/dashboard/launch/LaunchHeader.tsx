@@ -2,7 +2,7 @@ import { LaunchStatus } from '@/types/dashboard'
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { getBillingInfo } from '@/lib/dashboard-api'
 
 interface LaunchHeaderProps {
@@ -11,15 +11,15 @@ interface LaunchHeaderProps {
 }
 
 export function LaunchHeader({ status, sessionId }: LaunchHeaderProps) {
-  const [billingInfo, setBillingInfo] = useState<any>(null)
+  const [billingInfo, setBillingInfo] = useState<Record<string, unknown> | null>(null)
 
   useEffect(() => {
     if (sessionId) {
       loadBillingInfo()
     }
-  }, [sessionId])
+  }, [sessionId, loadBillingInfo])
 
-  const loadBillingInfo = async () => {
+  const loadBillingInfo = useCallback(async () => {
     if (!sessionId) return
     
     try {
@@ -28,7 +28,7 @@ export function LaunchHeader({ status, sessionId }: LaunchHeaderProps) {
     } catch (err) {
       console.error('Failed to load billing info:', err)
     }
-  }
+  }, [sessionId])
 
   const formatTimeRemaining = (minutes: number) => {
     const hours = Math.floor(minutes / 60)

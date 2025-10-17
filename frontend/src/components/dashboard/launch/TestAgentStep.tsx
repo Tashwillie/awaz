@@ -1,12 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Phone, Settings, Loader2 } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { Loader2 } from 'lucide-react'
 import { 
   getPhoneNumber, 
   requestNewPhoneNumber,
-  getTestCallConfig,
-  updateTestCallConfig,
   startTestCall
 } from '@/lib/dashboard-api'
 
@@ -15,35 +13,28 @@ interface TestAgentStepProps {
 }
 
 export function TestAgentStep({ sessionId }: TestAgentStepProps) {
-  const [phoneNumber, setPhoneNumber] = useState<any>(null)
-  const [testCallConfig, setTestCallConfig] = useState<any>(null)
+  const [phoneNumber, setPhoneNumber] = useState<Record<string, unknown> | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (sessionId) {
       loadData()
     }
-  }, [sessionId])
+  }, [sessionId, loadData])
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (!sessionId) return
     
     try {
       setIsLoading(true)
-      const [phone, testConfig] = await Promise.all([
-        getPhoneNumber(sessionId),
-        getTestCallConfig(sessionId)
-      ])
+      const phone = await getPhoneNumber(sessionId)
       setPhoneNumber(phone)
-      setTestCallConfig(testConfig)
     } catch (err) {
       console.error('Failed to load test agent data:', err)
-      setError('Failed to load test agent data')
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [sessionId])
 
   const handleRequestNewAreaCode = async () => {
     if (!sessionId) return
@@ -54,7 +45,6 @@ export function TestAgentStep({ sessionId }: TestAgentStepProps) {
       setPhoneNumber(newPhone)
     } catch (err) {
       console.error('Failed to request new phone number:', err)
-      setError('Failed to request new phone number')
     } finally {
       setIsLoading(false)
     }
@@ -70,7 +60,6 @@ export function TestAgentStep({ sessionId }: TestAgentStepProps) {
       alert('Test call initiated! Check your phone.')
     } catch (err) {
       console.error('Failed to start test call:', err)
-      setError('Failed to start test call')
     } finally {
       setIsLoading(false)
     }
