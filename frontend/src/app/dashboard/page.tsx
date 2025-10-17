@@ -21,8 +21,16 @@ export default function DashboardPage() {
     setCurrentStep,
     customizeState,
     updateCustomizeState,
+    sessionId,
     launchStatus,
     handleOpenTrainingFlow,
+    // Real API data
+    dashboardData,
+    callMetrics,
+    agentPerformance,
+    isLoading,
+    error,
+    setError,
   } = useDashboardState()
 
   const handleBack = () => {
@@ -40,7 +48,14 @@ export default function DashboardPage() {
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
-        return <TrainingStep onOpenTrainingFlow={handleOpenTrainingFlow} />
+        return (
+          <TrainingStep 
+            onOpenTrainingFlow={handleOpenTrainingFlow}
+            dashboardData={dashboardData}
+            callMetrics={callMetrics}
+            agentPerformance={agentPerformance}
+          />
+        )
       
       case 2:
         return (
@@ -57,12 +72,40 @@ export default function DashboardPage() {
           <LaunchStep
             status={launchStatus}
             onBack={handleBack}
+            sessionId={sessionId || undefined}
           />
         )
       
       default:
         return null
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-teal-100 mx-auto mb-4"></div>
+          <div className="text-gray-600">Loading dashboard...</div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 mb-4">{error}</div>
+          <button 
+            onClick={() => setError(null)}
+            className="px-4 py-2 bg-brand-teal-100 text-white rounded-lg hover:bg-brand-teal-200"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -79,7 +122,10 @@ export default function DashboardPage() {
       <div className="flex-1 w-full">
         <div className="w-full px-6 py-8 grid grid-cols-12 gap-8">
           {/* Sidebar */}
-          <DashboardSidebar />
+          <DashboardSidebar 
+            businessName={dashboardData?.business?.name || 'Demo Business'}
+            businessInitial={dashboardData?.business?.name?.charAt(0) || 'D'}
+          />
 
           {/* Main */}
           <main className="col-span-12 md:col-span-9">
