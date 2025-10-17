@@ -1,7 +1,7 @@
 "use client"
 
 import { Logo } from '@/components/ui/Logo'
-import { useAuthSession } from '@/lib/auth'
+// import { useAuthSession } from '@/lib/auth' // Removed authentication requirement
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar'
 import { StepNavigation } from '@/components/dashboard/StepNavigation'
 import { TrainingStep } from '@/components/dashboard/TrainingStep'
@@ -16,7 +16,6 @@ const STEPS = [
 ]
 
 export default function DashboardPage() {
-  const { status } = useAuthSession()
   const {
     currentStep,
     setCurrentStep,
@@ -25,21 +24,6 @@ export default function DashboardPage() {
     launchStatus,
     handleOpenTrainingFlow,
   } = useDashboardState()
-
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-600">Checking authentication…</div>
-      </div>
-    )
-  }
-
-  if (status === 'unauthenticated') {
-    if (typeof window !== 'undefined') {
-      window.location.href = '/demo'
-    }
-    return null
-  }
 
   const handleBack = () => {
     if (currentStep > 1) {

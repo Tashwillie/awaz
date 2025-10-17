@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { getDemoStatus } from '@/lib/api'
-import { isAuthenticated } from '@/lib/auth'
 import { CustomizeState, LaunchStatus } from '@/types/dashboard'
 
 const INITIAL_CUSTOMIZE_STATE: CustomizeState = {
   currentStep: 1,
-  customizeStep: 1,
   faqs: [],
   editingFaqs: true,
   agentName: 'Funnder',
@@ -20,7 +17,6 @@ const INITIAL_CUSTOMIZE_STATE: CustomizeState = {
 }
 
 export function useDashboardState() {
-  const router = useRouter()
   const [currentStep, setCurrentStep] = useState<number>(2) // 1: Train, 2: Customize, 3: Launch
   const [customizeState, setCustomizeState] = useState<CustomizeState>(INITIAL_CUSTOMIZE_STATE)
   const [sessionId, setSessionId] = useState<string | null>(null)
@@ -45,7 +41,7 @@ export function useDashboardState() {
       try {
         const data = await getDemoStatus(sessionId)
         if (!mounted) return
-        const business = data.businessProfile?.business_profile?.name
+        const business = data.businessProfile?.business_profile?.brand_voice || 'Unknown Business'
         setLaunchStatus(prev => ({ ...prev, business }))
       } catch (error) {
         console.error('Failed to fetch demo status:', error)
@@ -61,12 +57,7 @@ export function useDashboardState() {
     }
   }, [sessionId, currentStep])
 
-  // Check authentication
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      router.replace('/demo')
-    }
-  }, [router])
+  // Authentication check removed - dashboard is now public
 
   const updateCustomizeState = (updates: Partial<CustomizeState>) => {
     setCustomizeState(prev => ({ ...prev, ...updates }))
