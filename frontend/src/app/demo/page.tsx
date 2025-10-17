@@ -11,7 +11,7 @@ import { FeatureList } from '@/components/demo/FeatureList'
 import { BusinessCard, Business } from '@/components/demo/BusinessCard'
 import { AnimatedTrainingFlow } from '@/components/demo/AnimatedTrainingFlow'
 import { VoicePlayer } from '@/components/demo/VoicePlayer'
-import { Search, MapPin, Clock, GraduationCap, Speaker, Trophy, Check, Phone } from 'lucide-react'
+import { Search, MapPin, Clock, GraduationCap, Speaker, Trophy, Check } from 'lucide-react'
 import { searchPlaces, createDemoSession, confirmDemo, startVoiceCall } from '@/lib/api'
 // import { loginWithGoogle, loginWithEmail } from '@/lib/auth' // Temporarily disabled
 import { DemoFormData } from '@/types/demo'
@@ -415,8 +415,8 @@ export default function DemoPage() {
           />
         </div>
         <div className="space-y-3">
-          <Button className="w-full" size="lg" onClick={() => setCurrentStep(5)}>
-            Continue
+          <Button className="w-full" size="lg" onClick={() => window.location.href = '/dashboard'}>
+            Go to Dashboard
           </Button>
         </div>
       </div>
@@ -433,37 +433,6 @@ export default function DemoPage() {
         return renderStep3()
       case 4:
         return renderStep4()
-      case 5:
-        return (
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className="space-y-8">
-              <div className="space-y-3">
-                <h1 className="text-4xl font-bold text-gray-900 leading-tight tracking-tight">
-                  <span className="text-brand-teal-100">Claim</span> {selectedBusiness?.name}&apos;s Custom Agent
-                </h1>
-                <p className="text-lg text-gray-600 leading-relaxed">
-                  Your AI agent is ready! Create your account to start using Funnder for your business.
-                </p>
-              </div>
-              <FeatureList
-                features={[
-                  { icon: <Phone className="w-6 h-6" />, text: 'Grow your business while Funnder answers calls 24/7.' },
-                  { icon: <Clock className="w-6 h-6" />, text: '7-day trial with all features.' },
-                  { icon: <Check className="w-6 h-6" />, text: 'Our support team is here for you and ready to help.' },
-                ]}
-              />
-            </div>
-            <div className="space-y-8">
-              <div className="space-y-2">
-                <h3 className="text-3xl font-bold text-gray-900">Create Your Account</h3>
-                <p className="text-xl text-gray-600">Free for 7 days, then $99/month</p>
-              </div>
-              <Button className="w-full" size="lg">Continue with Google</Button>
-              <div className="text-center text-gray-400">or</div>
-              <Button className="w-full" variant="outline" size="lg">Continue with Email</Button>
-            </div>
-          </div>
-        )
       default:
         return renderStep1()
     }
@@ -485,7 +454,7 @@ export default function DemoPage() {
         <Card className="w-full max-w-5xl" padding="lg">
           <StepHeader
             currentStep={currentStep}
-            totalSteps={5}
+            totalSteps={4}
             onBack={currentStep > 1 ? handleBack : undefined}
           />
 
