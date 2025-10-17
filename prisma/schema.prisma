@@ -24,6 +24,25 @@ enum CallStatus {
   COMPLETED
 }
 
+enum PhoneNumberStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
+enum CallForwardingStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
+enum PhoneSystemType {
+  MOBILE
+  VOIP
+  PSTN
+  LANDLINE
+}
+
 model DemoSession {
   id              String       @id @default(cuid())
   createdAt       DateTime     @default(now())
@@ -96,6 +115,7 @@ model Call {
   updatedAt      DateTime    @updatedAt
   provider       String
   providerCallId String
+  twilioCallSid  String?     // Add Twilio call SID for tracking
   status         CallStatus  @default(INITIATED)
   startedAt      DateTime?
   connectedAt    DateTime?
@@ -103,6 +123,8 @@ model Call {
   durationSec    Int?
   summary        String?
   transcriptUrl  String?
+  recordingUrl   String?     // Add recording URL
+  rating         Int?        // Add call rating (1-5)
   rawMeta        Json?
 
   DemoSession    DemoSession @relation(fields: [demoSessionId], references: [id], onDelete: Cascade)
@@ -112,6 +134,7 @@ model Call {
   @@unique([provider, providerCallId])
   @@index([demoSessionId])
   @@index([status])
+  @@index([twilioCallSid])
 }
 
 model WebhookEvent {
@@ -161,6 +184,104 @@ model CandidatePlace {
 
   @@index([demoSessionId])
   @@index([placeId])
+}
+
+// Dashboard Models
+
+model PhoneNumber {
+  id           String           @id @default(cuid())
+  sessionId    String           // Dashboard session ID
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  twilioSid    String           @unique // Twilio phone number SID
+  number       String           @unique // E164 format phone number
+  areaCode     String
+  city         String
+  state        String
+  country      String           @default("US")
+  status       PhoneNumberStatus @default(ACTIVE)
+  provider     String           @default("twilio")
+  
+  @@index([sessionId])
+  @@index([number])
+}
+
+model CallForwardingConfig {
+  id                  String               @id @default(cuid())
+  sessionId           String               @unique
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  phoneSystemType     PhoneSystemType
+  provider            String
+  userPhoneNumber     String               // User's actual phone number
+  funnderPhoneNumber  String               // Funnder AI phone number
+  status              CallForwardingStatus @default(PENDING)
+  setupInstructions   String[]             // Array of setup instructions
+  lastTestedAt        DateTime?
+  
+  @@index([sessionId])
+  @@index([status])
+}
+
+model TestCallConfig {
+  id              String    @id @default(cuid())
+  sessionId       String    @unique
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  phoneNumber     String    // Funnder phone number for testing
+  allowedNumbers  String[]  // Array of allowed test phone numbers
+  status          String    @default("active") // "active" or "inactive"
+  
+  @@index([sessionId])
+}
+
+model BillingInfo {
+  id                  String    @id @default(cuid())
+  sessionId           String    @unique
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  trialMinutes        Int       @default(60) // Trial minutes allocated
+  usedMinutes         Int       @default(0)  // Minutes used
+  remainingMinutes    Int       @default(60) // Remaining trial minutes
+  trialEndDate        DateTime
+  hasPaymentMethod    Boolean   @default(false)
+  status              String    @default("trial") // "trial", "active", "expired", "cancelled"
+  plan                String    @default("trial") // "trial", "basic", "premium"
+  pricePerMinute      Float     @default(0.02) // Price per minute in USD
+  
+  @@index([sessionId])
+  @@index([status])
+}
+
+model AgentConfig {
+  id                        String    @id @default(cuid())
+  sessionId                 String    @unique
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
+  agentName                 String    @default("Funnder")
+  greeting                  String
+  backgroundNoise           String    @default("Office")
+  includeRecordingDisclaimer Boolean  @default(true)
+  faqs                      Json      // Array of {question, answer} objects
+  customQuestions           String[]  // Array of custom questions
+  status                    String    @default("active") // "active", "inactive", "training"
+  
+  @@index([sessionId])
+  @@index([status])
+}
+
+model CallMetrics {
+  id              String   @id @default(cuid())
+  sessionId       String   @unique
+  date            DateTime @default(now())
+  totalCalls      Int      @default(0)
+  answeredCalls   Int      @default(0)
+  missedCalls     Int      @default(0)
+  averageDuration Float    @default(0)
+  successRate     Float    @default(0)
+  
+  @@index([sessionId])
+  @@index([date])
 }
 
 

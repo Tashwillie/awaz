@@ -33,9 +33,10 @@ export async function POST(request: NextRequest) {
     const voiceProvider = getActiveProvider();
     const signature = request.headers.get('x-signature') || 
                       request.headers.get('x-retell-signature') || 
-                      request.headers.get('x-vapi-signature') || '';
+                      request.headers.get('x-vapi-signature') ||
+                      request.headers.get('x-awaz-signature') || '';
     
-    const webhookSecret = env.RETELL_WEBHOOK_SECRET || env.VAPI_WEBHOOK_SECRET || '';
+    const webhookSecret = env.RETELL_WEBHOOK_SECRET || env.VAPI_WEBHOOK_SECRET || env.AWAZ_WEBHOOK_SECRET || '';
     const isValidSignature = await voiceProvider.verifyWebhook(signature, body, webhookSecret);
     
     if (!isValidSignature) {

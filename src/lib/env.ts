@@ -17,6 +17,13 @@ export const envSchema = z.object({
   VAPI_API_KEY: z.string().optional(),
   VAPI_WEBHOOK_SECRET: z.string().optional(),
   AWAZ_API_KEY: z.string().optional(),
+  AWAZ_WEBHOOK_SECRET: z.string().optional(),
+  AWAZ_AGENT_ID: z.string().optional(),
+  
+  // Twilio Configuration
+  TWILIO_ACCOUNT_SID: z.string().optional(),
+  TWILIO_AUTH_TOKEN: z.string().optional(),
+  TWILIO_PHONE_NUMBER: z.string().optional(),
   
   CRM: z.enum(['hubspot', 'pipedrive']).default('hubspot'),
   HUBSPOT_API_KEY: z.string().optional(),
@@ -57,6 +64,11 @@ export function getEnv(): Env {
           VAPI_API_KEY: process.env.VAPI_API_KEY,
           VAPI_WEBHOOK_SECRET: process.env.VAPI_WEBHOOK_SECRET,
           AWAZ_API_KEY: process.env.AWAZ_API_KEY,
+          AWAZ_WEBHOOK_SECRET: process.env.AWAZ_WEBHOOK_SECRET,
+          AWAZ_AGENT_ID: process.env.AWAZ_AGENT_ID,
+          TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
+          TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
+          TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER,
           CRM: (process.env.CRM as any) || 'hubspot',
           HUBSPOT_API_KEY: process.env.HUBSPOT_API_KEY,
           PIPEDRIVE_API_TOKEN: process.env.PIPEDRIVE_API_TOKEN,

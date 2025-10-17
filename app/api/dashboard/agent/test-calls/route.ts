@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getActiveProvider } from '@/services/providers/voice/register'
+import { twilioService } from '@/services/twilio.service'
 
 interface TestCall {
   id: string
@@ -121,31 +122,59 @@ export async function POST(request: NextRequest) {
       }
 
       // Start the call using Awaz
-      const callResult = await voiceProvider.startCall({
-        phone: phoneNumber,
-        profile: mockProfile
-      })
+      const callResult = await voiceProvider.startCall(
+        sessionId,
+        phoneNumber,
+        mockProfile
+      )
+
+      // Now make the actual phone call using Twilio
+      const twilioCallSid = await twilioService.makeOutboundCall(
+        phoneNumber,
+        process.env.TWILIO_PHONE_NUMBER || '+16516613101'
+      )
 
       return NextResponse.json({
         success: true,
-        message: 'Test call initiated successfully with Awaz',
-        callId: callResult.callId,
+        message: 'Test call initiated successfully with Awaz + Twilio',
+        callId: callResult,
+        twilioCallSid: twilioCallSid,
         status: 'initiated',
-        provider: 'awaz'
+        provider: 'awaz',
+        phoneProvider: 'twilio'
       })
 
     } catch (providerError) {
       console.error('Voice provider error:', providerError)
       
-      // Fallback to mock response if provider fails
-      return NextResponse.json({
-        success: true,
-        message: 'Test call initiated (fallback mode)',
-        callId: `call_${Date.now()}`,
-        status: 'initiated',
-        provider: 'mock',
-        warning: 'Voice provider unavailable, using mock response'
-      })
+      // Try to make a basic Twilio call even if Awaz fails
+      try {
+        const twilioCallSid = await twilioService.makeOutboundCall(
+          phoneNumber,
+          process.env.TWILIO_PHONE_NUMBER || '+16516613101'
+        )
+
+        return NextResponse.json({
+          success: true,
+          message: 'Test call initiated with Twilio (Awaz unavailable)',
+          twilioCallSid: twilioCallSid,
+          status: 'initiated',
+          provider: 'twilio',
+          warning: 'Awaz voice provider unavailable, using Twilio only'
+        })
+      } catch (twilioError) {
+        console.error('Twilio call error:', twilioError)
+        
+        // Final fallback to mock response
+        return NextResponse.json({
+          success: true,
+          message: 'Test call initiated (mock mode)',
+          callId: `call_${Date.now()}`,
+          status: 'initiated',
+          provider: 'mock',
+          warning: 'Both Awaz and Twilio unavailable, using mock response'
+        })
+      }
     }
 
   } catch (error) {
