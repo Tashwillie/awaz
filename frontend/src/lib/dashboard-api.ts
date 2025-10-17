@@ -1,4 +1,4 @@
-import { Business, DemoSession, BusinessProfile, Call } from '@/types/demo'
+import { Business, Call } from '@/types/demo'
 import { CustomizeState, Faq } from '@/types/dashboard'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
@@ -7,7 +7,7 @@ class ApiError extends Error {
   constructor(
     message: string,
     public status: number,
-    public details?: any
+    public details?: unknown
   ) {
     super(message)
     this.name = 'ApiError'
@@ -254,7 +254,7 @@ export async function getIntegrations(sessionId: string): Promise<{
 export async function updateIntegration(
   sessionId: string,
   type: 'crm' | 'calendar' | 'voice' | 'webhook',
-  config: any
+  config: Record<string, unknown>
 ): Promise<{ success: boolean; message: string }> {
   const data = await apiRequest<{ success: boolean; message: string }>('/api/dashboard/integrations', {
     method: 'PUT',
@@ -350,7 +350,7 @@ export async function getBillingInfo(sessionId: string): Promise<{
 export async function startFreeTrial(sessionId: string): Promise<{
   success: boolean
   message: string
-  billing: any
+  billing: Record<string, unknown>
 }> {
   const data = await apiRequest('/api/dashboard/billing', {
     method: 'POST',
@@ -362,7 +362,7 @@ export async function startFreeTrial(sessionId: string): Promise<{
 export async function addPaymentMethod(sessionId: string): Promise<{
   success: boolean
   message: string
-  billing: any
+  billing: Record<string, unknown>
 }> {
   const data = await apiRequest('/api/dashboard/billing', {
     method: 'POST',
@@ -395,7 +395,7 @@ export async function configureCallForwarding(
 ): Promise<{
   success: boolean
   message: string
-  config: any
+  config: Record<string, unknown>
 }> {
   const data = await apiRequest('/api/dashboard/agent/call-forwarding', {
     method: 'POST',
@@ -416,7 +416,7 @@ export async function updateCallForwardingStatus(
 ): Promise<{
   success: boolean
   message: string
-  config: any
+  config: Record<string, unknown>
 }> {
   const data = await apiRequest('/api/dashboard/agent/call-forwarding', {
     method: 'PUT',
@@ -428,7 +428,7 @@ export async function updateCallForwardingStatus(
 // Real-time Updates
 export async function subscribeToUpdates(
   sessionId: string,
-  onUpdate: (data: any) => void
+  onUpdate: (data: DashboardData) => void
 ): Promise<() => void> {
   // In a real implementation, this would use WebSockets or Server-Sent Events
   // For now, we'll simulate with polling

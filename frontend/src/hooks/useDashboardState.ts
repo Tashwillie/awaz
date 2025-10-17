@@ -3,11 +3,9 @@ import { getDemoStatus } from '@/lib/api'
 import { 
   getDashboardData, 
   getCallMetrics, 
-  getRecentCalls, 
   getAgentPerformance,
   getAgentConfig,
   updateAgentConfig,
-  subscribeToUpdates,
   CallMetrics,
   AgentPerformance,
   DashboardData

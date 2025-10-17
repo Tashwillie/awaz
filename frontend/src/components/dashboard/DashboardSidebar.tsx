@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+// import { ReactNode } from 'react' // Unused import
 
 interface NavigationItem {
   label: string

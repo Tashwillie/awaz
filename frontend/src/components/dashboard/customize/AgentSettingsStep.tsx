@@ -1,6 +1,6 @@
 import { CustomizeStepProps } from '@/types/dashboard'
 
-export function AgentSettingsStep({ state, onUpdateState, onBack, onContinue }: CustomizeStepProps) {
+export function AgentSettingsStep({ state, onUpdateState }: CustomizeStepProps) {
   const handleSaveChanges = () => {
     onUpdateState({ editingAgent: false })
   }
@@ -20,7 +20,7 @@ export function AgentSettingsStep({ state, onUpdateState, onBack, onContinue }: 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-6">
       <h2 className="text-xl font-semibold text-gray-900 text-center mb-2">
-        Want to change your agent's name and background noise?
+        Want to change your agent&apos;s name and background noise?
       </h2>
 
       {state.editingAgent ? (

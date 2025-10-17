@@ -23,7 +23,7 @@ export function TrainingStep({
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Dashboard Overview</h2>
-              <p className="text-gray-600 mt-1">Monitor your AI agent's performance and activity</p>
+              <p className="text-gray-600 mt-1">Monitor your AI agent&apos;s performance and activity</p>
             </div>
             <button
               onClick={onOpenTrainingFlow}

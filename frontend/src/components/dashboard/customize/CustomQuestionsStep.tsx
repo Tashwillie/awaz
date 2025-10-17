@@ -1,6 +1,6 @@
 import { CustomizeStepProps } from '@/types/dashboard'
 
-export function CustomQuestionsStep({ state, onUpdateState, onBack, onContinue }: CustomizeStepProps) {
+export function CustomQuestionsStep({ state, onUpdateState }: CustomizeStepProps) {
   const handleAddQuestion = () => {
     onUpdateState({ customQuestions: [...state.customQuestions, ''] })
   }

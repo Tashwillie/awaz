@@ -5,7 +5,7 @@ import { AgentSettingsStep } from './AgentSettingsStep'
 import { GreetingStep } from './GreetingStep'
 import { CustomQuestionsStep } from './CustomQuestionsStep'
 
-export function CustomizeStep({ state, onUpdateState, onBack, onContinue }: CustomizeStepProps) {
+export function CustomizeStep({ state, onUpdateState }: CustomizeStepProps) {
   const handleUpdateState = (updates: Partial<typeof state>) => {
     onUpdateState(updates)
   }

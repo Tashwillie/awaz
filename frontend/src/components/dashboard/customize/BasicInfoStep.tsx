@@ -1,6 +1,6 @@
 import { CustomizeStepProps } from '@/types/dashboard'
 
-export function BasicInfoStep({ state, onUpdateState, onBack, onContinue }: CustomizeStepProps) {
+export function BasicInfoStep({ state, onUpdateState }: CustomizeStepProps) {
   const handleSaveAndContinue = () => {
     // Here you would typically validate the form data
     onUpdateState({ currentStep: 2, editingFaqs: state.faqs.length === 0 })
@@ -13,7 +13,7 @@ export function BasicInfoStep({ state, onUpdateState, onBack, onContinue }: Cust
       </h1>
       <p className="text-center text-gray-600 mb-6">
         Complete the following steps to help Funnder be accurate and effective for your callers. 
-        Don't worry, you can make changes to these settings later.
+        Don&apos;t worry, you can make changes to these settings later.
       </p>
 
       {/* Trained on card */}
@@ -30,7 +30,7 @@ export function BasicInfoStep({ state, onUpdateState, onBack, onContinue }: Cust
       {/* Form card */}
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 text-center mb-6">
-          Let's start by confirming we have your basic business info right.
+          Let&apos;s start by confirming we have your basic business info right.
         </h2>
         <div className="space-y-5">
           <div>

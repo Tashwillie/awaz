@@ -108,7 +108,7 @@ export function TestAgentStep({ sessionId }: TestAgentStepProps) {
       
       <div className="rounded-xl border border-yellow-200 bg-yellow-50 text-yellow-800 text-sm p-3 mb-4">
         During test mode, your agent can only receive calls from designated testing numbers. 
-        No external callers will be able to reach your agent. Calls from test numbers won't 
+        No external callers will be able to reach your agent. Calls from test numbers won&apos;t 
         count against your minutes.
       </div>
       
@@ -117,7 +117,7 @@ export function TestAgentStep({ sessionId }: TestAgentStepProps) {
           <div className="text-sm text-gray-600 mb-2">Allow test calls from:</div>
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-700">
-              We'll automatically capture your phone number when you make your first test call. 
+              We&apos;ll automatically capture your phone number when you make your first test call. 
               Give it a try!
             </div>
             <button 

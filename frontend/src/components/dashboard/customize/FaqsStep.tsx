@@ -1,6 +1,6 @@
 import { CustomizeStepProps } from '@/types/dashboard'
 
-export function FaqsStep({ state, onUpdateState, onBack, onContinue }: CustomizeStepProps) {
+export function FaqsStep({ state, onUpdateState }: CustomizeStepProps) {
   const handleAddFaq = () => {
     const newFaq = {
       id: crypto.randomUUID(),

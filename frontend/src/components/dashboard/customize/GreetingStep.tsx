@@ -1,6 +1,6 @@
 import { CustomizeStepProps } from '@/types/dashboard'
 
-export function GreetingStep({ state, onUpdateState, onBack, onContinue }: CustomizeStepProps) {
+export function GreetingStep({ state, onUpdateState }: CustomizeStepProps) {
   const handleSaveChanges = () => {
     onUpdateState({ editingGreeting: false })
   }
