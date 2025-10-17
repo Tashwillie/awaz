@@ -92,7 +92,7 @@ export function RecentCallsList({ calls }: RecentCallsListProps) {
                 <div>
                   <div className="flex items-center space-x-2">
                     <span className="font-medium text-gray-900">
-                      {call.phoneNumber ? maskPhoneNumber(call.phoneNumber) : &apos;N/A&apos;}
+                      {call.phoneNumber ? maskPhoneNumber(call.phoneNumber) : 'N/A'}
                     </span>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(call.status)}`}>
                       {call.status.replace('_', ' ')}
