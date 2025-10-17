@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@/test-utils/test-utils'
+import { render, screen, fireEvent } from '@/test-utils/test-utils'
 import DashboardPage from '../page'
 
 // Mock the components

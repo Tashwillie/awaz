@@ -10,14 +10,14 @@ const handler = NextAuth({
   ],
   session: { strategy: 'jwt' },
   callbacks: {
-    async jwt({ token, account, profile }) {
+    async jwt({ token, account }) {
       if (account) {
         token.provider = account.provider
       }
       return token
     },
     async session({ session, token }) {
-      (session as any).provider = token.provider
+      (session as unknown as { provider?: string }).provider = token.provider
       return session
     },
   },

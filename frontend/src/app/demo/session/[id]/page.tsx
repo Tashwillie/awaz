@@ -11,7 +11,7 @@ import { getDemoStatus } from '@/lib/api'
 interface SessionStatus {
   status: string
   callStatus?: string
-  businessProfile?: any
+  businessProfile?: Record<string, unknown>
   call?: {
     id: string
     status: string
@@ -204,7 +204,7 @@ export default function DemoSessionPage() {
                   Call Failed
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  We're sorry, but the demo call could not be completed.
+                  We&apos;re sorry, but the demo call could not be completed.
                 </p>
                 <Button onClick={() => window.location.href = '/demo'}>
                   Try Again
@@ -247,7 +247,7 @@ export default function DemoSessionPage() {
         {sessionStatus.businessProfile && (
           <Card className="mt-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Your AI Agent's Training Data
+              Your AI Agent&apos;s Training Data
             </h2>
             
             <div className="grid md:grid-cols-2 gap-6">
