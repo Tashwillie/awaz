@@ -17,7 +17,9 @@ const handler = NextAuth({
       return token
     },
     async session({ session, token }) {
-      (session as unknown as { provider?: string }).provider = token.provider
+      if (token.provider) {
+        (session as { provider?: string }).provider = token.provider as string
+      }
       return session
     },
   },
