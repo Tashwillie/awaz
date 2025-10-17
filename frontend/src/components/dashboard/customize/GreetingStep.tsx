@@ -10,11 +10,11 @@ export function GreetingStep({ state, onUpdateState, onBack, onContinue }: Custo
   }
 
   const handleContinue = () => {
-    onUpdateState({ customizeStep: 5, editingCustomQs: false })
+    onUpdateState({ currentStep: 5, editingCustomQs: false })
   }
 
   const handleBack = () => {
-    onUpdateState({ customizeStep: 3, editingAgent: false })
+    onUpdateState({ currentStep: 3, editingAgent: false })
   }
 
   return (

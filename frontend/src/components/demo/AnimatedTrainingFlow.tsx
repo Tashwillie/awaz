@@ -20,7 +20,7 @@ interface AnimatedTrainingFlowProps {
 
 export function AnimatedTrainingFlow({ onComplete, businessName, websiteUrl }: AnimatedTrainingFlowProps) {
   const [progress, setProgress] = useState(0)
-  const [currentStep, setCurrentStep] = useState(0)
+  // const [currentStep, setCurrentStep] = useState(0) // Unused variables
   const [isTraining, setIsTraining] = useState(true)
   const [trainingSteps, setTrainingSteps] = useState<TrainingStep[]>([
     { id: 'analyze', label: 'Analyzing your website for data.', completed: false, inProgress: false },
@@ -74,7 +74,7 @@ export function AnimatedTrainingFlow({ onComplete, businessName, websiteUrl }: A
       clearInterval(interval)
       clearInterval(stepInterval)
     }
-  }, [isTraining, progress])
+  }, [isTraining, progress, trainingSteps.length])
 
   const handleStartTraining = async () => {
     setIsTraining(true)
@@ -164,7 +164,7 @@ export function AnimatedTrainingFlow({ onComplete, businessName, websiteUrl }: A
 
         {/* Training Steps */}
         <ul className="space-y-4 text-gray-700">
-          {trainingSteps.map((step, index) => (
+          {trainingSteps.map((step) => (
             <li key={step.id} className="flex items-center space-x-3">
               <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
                 {step.completed ? (

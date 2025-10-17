@@ -1,5 +1,17 @@
 import { useState, useEffect } from 'react'
 import { getDemoStatus } from '@/lib/api'
+import { 
+  getDashboardData, 
+  getCallMetrics, 
+  getRecentCalls, 
+  getAgentPerformance,
+  getAgentConfig,
+  updateAgentConfig,
+  subscribeToUpdates,
+  CallMetrics,
+  AgentPerformance,
+  DashboardData
+} from '@/lib/dashboard-api'
 import { CustomizeState, LaunchStatus } from '@/types/dashboard'
 
 const INITIAL_CUSTOMIZE_STATE: CustomizeState = {
@@ -21,15 +33,43 @@ export function useDashboardState() {
   const [customizeState, setCustomizeState] = useState<CustomizeState>(INITIAL_CUSTOMIZE_STATE)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [launchStatus, setLaunchStatus] = useState<LaunchStatus>({})
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
+  const [callMetrics, setCallMetrics] = useState<CallMetrics | null>(null)
+  const [agentPerformance, setAgentPerformance] = useState<AgentPerformance | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  // Load session ID from localStorage
+  // Load session ID from localStorage and fetch dashboard data
   useEffect(() => {
-    try {
-      const sid = localStorage.getItem('funnder_session_id')
-      if (sid) setSessionId(sid)
-    } catch (error) {
-      console.error('Failed to load session ID:', error)
+    const loadDashboardData = async () => {
+      try {
+        const sid = localStorage.getItem('funnder_session_id')
+        if (sid) {
+          setSessionId(sid)
+          setIsLoading(true)
+          
+          // Fetch all dashboard data in parallel
+          const [dashboard, metrics, agent, config] = await Promise.all([
+            getDashboardData(sid),
+            getCallMetrics(sid),
+            getAgentPerformance(sid),
+            getAgentConfig(sid)
+          ])
+          
+          setDashboardData(dashboard)
+          setCallMetrics(metrics)
+          setAgentPerformance(agent)
+          setCustomizeState(config)
+        }
+      } catch (error) {
+        console.error('Failed to load dashboard data:', error)
+        setError('Failed to load dashboard data')
+      } finally {
+        setIsLoading(false)
+      }
     }
+
+    loadDashboardData()
   }, [])
 
   // Poll for demo status when in launch step
@@ -59,8 +99,20 @@ export function useDashboardState() {
 
   // Authentication check removed - dashboard is now public
 
-  const updateCustomizeState = (updates: Partial<CustomizeState>) => {
-    setCustomizeState(prev => ({ ...prev, ...updates }))
+  const updateCustomizeState = async (updates: Partial<CustomizeState>) => {
+    try {
+      if (sessionId) {
+        // Update on server
+        const updatedConfig = await updateAgentConfig(sessionId, updates)
+        setCustomizeState(updatedConfig)
+      } else {
+        // Update locally if no session
+        setCustomizeState(prev => ({ ...prev, ...updates }))
+      }
+    } catch (error) {
+      console.error('Failed to update agent config:', error)
+      setError('Failed to update agent configuration')
+    }
   }
 
   const handleOpenTrainingFlow = () => {
@@ -75,5 +127,12 @@ export function useDashboardState() {
     sessionId,
     launchStatus,
     handleOpenTrainingFlow,
+    // Real API data
+    dashboardData,
+    callMetrics,
+    agentPerformance,
+    isLoading,
+    error,
+    setError,
   }
 }

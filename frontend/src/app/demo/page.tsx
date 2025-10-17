@@ -120,7 +120,7 @@ export default function DemoPage() {
       setIsLoading(true)
       setError(null)
       try {
-        const session = await createDemoSession('retell')
+        const session = await createDemoSession('awaz')
         // setSessionId(session.id) // Temporarily disabled
         try { localStorage.setItem('funnder_session_id', session.id) } catch {}
         await confirmDemo(

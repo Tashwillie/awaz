@@ -130,7 +130,7 @@ describe('AgentSettingsStep', () => {
     fireEvent.click(continueButton)
     
     expect(mockOnUpdateState).toHaveBeenCalledWith({ 
-      customizeStep: 4, 
+      currentStep: 4, 
       editingGreeting: false 
     })
   })

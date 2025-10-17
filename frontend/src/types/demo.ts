@@ -50,6 +50,7 @@ export interface Call {
   status: 'INITIATED' | 'RINGING' | 'CONNECTED' | 'FAILED' | 'COMPLETED'
   provider: string
   providerCallId: string
+  phoneNumber?: string
   startedAt?: string
   connectedAt?: string
   endedAt?: string

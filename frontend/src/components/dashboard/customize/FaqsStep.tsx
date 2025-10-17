@@ -31,7 +31,7 @@ export function FaqsStep({ state, onUpdateState, onBack, onContinue }: Customize
   }
 
   const handleContinue = () => {
-    onUpdateState({ customizeStep: 3, editingAgent: false })
+    onUpdateState({ currentStep: 3, editingAgent: false })
   }
 
   return (

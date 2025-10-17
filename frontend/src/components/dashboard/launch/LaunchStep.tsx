@@ -8,15 +8,16 @@ import { HelpFooter } from './HelpFooter'
 interface LaunchStepProps {
   status: LaunchStatus
   onBack: () => void
+  sessionId?: string
 }
 
-export function LaunchStep({ status, onBack }: LaunchStepProps) {
+export function LaunchStep({ status, onBack, sessionId }: LaunchStepProps) {
   return (
     <div className="space-y-6">
-      <LaunchHeader status={status} />
-      <TestAgentStep />
-      <FreeTrialStep />
-      <AnswerCallsStep />
+      <LaunchHeader status={status} sessionId={sessionId} />
+      <TestAgentStep sessionId={sessionId} />
+      <FreeTrialStep sessionId={sessionId} />
+      <AnswerCallsStep sessionId={sessionId} />
       <HelpFooter />
       
       {/* Bottom navigation */}

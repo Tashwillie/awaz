@@ -104,9 +104,10 @@ export function VoicePlayer({
 
   // Cleanup audio URL when component unmounts
   useEffect(() => {
+    const audioElement = audioRef.current
     return () => {
-      if (audioRef.current?.src) {
-        URL.revokeObjectURL(audioRef.current.src)
+      if (audioElement?.src) {
+        URL.revokeObjectURL(audioElement.src)
       }
     }
   }, [])

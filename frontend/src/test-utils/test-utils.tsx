@@ -25,7 +25,6 @@ export const createMockFaq = (overrides = {}) => ({
 
 export const createMockCustomizeState = (overrides = {}) => ({
   currentStep: 1,
-  customizeStep: 1,
   faqs: [],
   editingFaqs: true,
   agentName: 'Test Agent',
@@ -59,8 +58,8 @@ export const createMockDemoStatus = (overrides = {}) => ({
   call: {
     id: 'test-call-id',
     status: 'COMPLETED',
-    provider: 'retell',
-    providerCallId: 'retell-123',
+    provider: 'awaz',
+    providerCallId: 'awaz-123',
   },
   ...overrides,
 })

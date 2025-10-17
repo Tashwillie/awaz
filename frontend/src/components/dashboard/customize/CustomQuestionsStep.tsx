@@ -26,7 +26,7 @@ export function CustomQuestionsStep({ state, onUpdateState, onBack, onContinue }
   }
 
   const handleBack = () => {
-    onUpdateState({ customizeStep: 4, editingGreeting: false })
+    onUpdateState({ currentStep: 4, editingGreeting: false })
   }
 
   return (

@@ -19,7 +19,7 @@ export function CustomizeStep({ state, onUpdateState, onBack, onContinue }: Cust
     onContinue()
   }
 
-  switch (state.customizeStep) {
+  switch (state.currentStep) {
     case 1:
       return (
         <BasicInfoStep

@@ -6,7 +6,7 @@ class ApiError extends Error {
   constructor(
     message: string,
     public status: number,
-    public details?: any
+    public details?: unknown
   ) {
     super(message)
     this.name = 'ApiError'
@@ -65,7 +65,7 @@ export async function searchPlaces(
 }
 
 // Demo API
-export async function createDemoSession(provider: string = 'retell'): Promise<DemoSession> {
+export async function createDemoSession(provider: string = 'awaz'): Promise<DemoSession> {
   const data = await apiRequest<DemoSession>('/api/demo/start', {
     method: 'POST',
     body: JSON.stringify({ provider }),
@@ -85,7 +85,7 @@ export async function confirmDemo(
   options: {
     useFirecrawl?: boolean
     websiteExcerpt?: string
-    edits?: Record<string, any>
+    edits?: Record<string, unknown>
     faqs?: string[]
   } = {}
 ): Promise<BusinessProfile> {

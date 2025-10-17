@@ -14,7 +14,7 @@ export function logout(): void {
 
 export function isAuthenticated(): boolean {
   if (typeof window === 'undefined') return false
-  const session = (window as any).__NEXT_AUTH_SESSION__
+  const session = (window as unknown as { __NEXT_AUTH_SESSION__?: unknown }).__NEXT_AUTH_SESSION__
   return Boolean(session)
 }
 

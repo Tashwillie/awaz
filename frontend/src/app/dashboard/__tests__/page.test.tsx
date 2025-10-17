@@ -59,7 +59,6 @@ describe('DashboardPage', () => {
       setCurrentStep: jest.fn(),
       customizeState: {
         currentStep: 1,
-        customizeStep: 1,
         faqs: [],
         editingFaqs: true,
         agentName: 'Test Agent',
@@ -123,8 +122,7 @@ describe('DashboardPage', () => {
   it('passes correct props to CustomizeStep', () => {
     const mockUpdateCustomizeState = jest.fn()
     const mockCustomizeState = {
-      currentStep: 1,
-      customizeStep: 2,
+      currentStep: 2,
       faqs: [],
       editingFaqs: false,
       agentName: 'Test Agent',

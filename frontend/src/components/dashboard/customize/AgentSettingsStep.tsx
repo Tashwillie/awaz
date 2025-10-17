@@ -10,11 +10,11 @@ export function AgentSettingsStep({ state, onUpdateState, onBack, onContinue }: 
   }
 
   const handleContinue = () => {
-    onUpdateState({ customizeStep: 4, editingGreeting: false })
+    onUpdateState({ currentStep: 4, editingGreeting: false })
   }
 
   const handleBack = () => {
-    onUpdateState({ customizeStep: 2, editingFaqs: false })
+    onUpdateState({ currentStep: 2, editingFaqs: false })
   }
 
   return (

@@ -178,7 +178,7 @@ describe('FaqsStep', () => {
     fireEvent.click(continueButton)
     
     expect(mockOnUpdateState).toHaveBeenCalledWith({ 
-      customizeStep: 3, 
+      currentStep: 3, 
       editingAgent: false 
     })
   })

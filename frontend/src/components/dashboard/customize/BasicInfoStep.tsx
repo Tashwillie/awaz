@@ -3,7 +3,7 @@ import { CustomizeStepProps } from '@/types/dashboard'
 export function BasicInfoStep({ state, onUpdateState, onBack, onContinue }: CustomizeStepProps) {
   const handleSaveAndContinue = () => {
     // Here you would typically validate the form data
-    onUpdateState({ customizeStep: 2, editingFaqs: state.faqs.length === 0 })
+    onUpdateState({ currentStep: 2, editingFaqs: state.faqs.length === 0 })
   }
 
   return (

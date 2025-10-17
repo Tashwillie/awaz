@@ -1,4 +1,97 @@
-export function TestAgentStep() {
+'use client'
+
+import { useState, useEffect } from 'react'
+import { Phone, Settings, Loader2 } from 'lucide-react'
+import { 
+  getPhoneNumber, 
+  requestNewPhoneNumber,
+  getTestCallConfig,
+  updateTestCallConfig,
+  startTestCall
+} from '@/lib/dashboard-api'
+
+interface TestAgentStepProps {
+  sessionId?: string
+}
+
+export function TestAgentStep({ sessionId }: TestAgentStepProps) {
+  const [phoneNumber, setPhoneNumber] = useState<any>(null)
+  const [testCallConfig, setTestCallConfig] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (sessionId) {
+      loadData()
+    }
+  }, [sessionId])
+
+  const loadData = async () => {
+    if (!sessionId) return
+    
+    try {
+      setIsLoading(true)
+      const [phone, testConfig] = await Promise.all([
+        getPhoneNumber(sessionId),
+        getTestCallConfig(sessionId)
+      ])
+      setPhoneNumber(phone)
+      setTestCallConfig(testConfig)
+    } catch (err) {
+      console.error('Failed to load test agent data:', err)
+      setError('Failed to load test agent data')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleRequestNewAreaCode = async () => {
+    if (!sessionId) return
+    
+    try {
+      setIsLoading(true)
+      const newPhone = await requestNewPhoneNumber(sessionId, '651') // Default to 651
+      setPhoneNumber(newPhone)
+    } catch (err) {
+      console.error('Failed to request new phone number:', err)
+      setError('Failed to request new phone number')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleTestCall = async () => {
+    if (!sessionId || !phoneNumber) return
+    
+    try {
+      setIsLoading(true)
+      await startTestCall(sessionId, phoneNumber.number)
+      // In a real implementation, this would initiate a call
+      alert('Test call initiated! Check your phone.')
+    } catch (err) {
+      console.error('Failed to start test call:', err)
+      setError('Failed to start test call')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleManageTestNumbers = async () => {
+    // In a real implementation, this would open a modal to manage test numbers
+    alert('Test number management would open here')
+  }
+
+  if (isLoading && !phoneNumber) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        <div className="flex items-center justify-center">
+          <Loader2 className="w-6 h-6 animate-spin text-brand-teal-100" />
+          <span className="ml-2 text-gray-600">Loading test agent setup...</span>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-4">
@@ -27,7 +120,10 @@ export function TestAgentStep() {
               We'll automatically capture your phone number when you make your first test call. 
               Give it a try!
             </div>
-            <button className="px-3 py-1.5 rounded-lg border text-sm hover:bg-gray-50 transition-colors duration-200">
+            <button 
+              onClick={handleManageTestNumbers}
+              className="px-3 py-1.5 rounded-lg border text-sm hover:bg-gray-50 transition-colors duration-200"
+            >
               Manage
             </button>
           </div>
@@ -37,11 +133,27 @@ export function TestAgentStep() {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <div className="text-xs text-gray-500 mb-2">Your Funnder Number</div>
-              <button className="w-full bg-brand-teal-100 text-white py-2 rounded-lg mb-1 hover:bg-brand-teal-200 transition-colors duration-200">
-                Call
+              <button 
+                onClick={handleTestCall}
+                disabled={isLoading}
+                className="w-full bg-brand-teal-100 text-white py-2 rounded-lg mb-1 hover:bg-brand-teal-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center">
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    Calling...
+                  </div>
+                ) : (
+                  'Call'
+                )}
               </button>
-              <div className="text-center font-semibold text-gray-900">(651) 661-3101</div>
-              <div className="text-center text-xs text-gray-500 mt-1 underline hover:text-gray-700 cursor-pointer">
+              <div className="text-center font-semibold text-gray-900">
+                {phoneNumber ? phoneNumber.number : '(651) 661-3101'}
+              </div>
+              <div 
+                onClick={handleRequestNewAreaCode}
+                className="text-center text-xs text-gray-500 mt-1 underline hover:text-gray-700 cursor-pointer"
+              >
                 Request local area code
               </div>
             </div>
