@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getActiveProvider } from '@/services/providers/voice/register'
 
 interface TestCall {
   id: string
@@ -104,25 +105,53 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // In a real implementation, this would:
-    // 1. Use Twilio to make an outbound call to the user's phone
-    // 2. Connect the call to the AI agent via the voice provider
-    // 3. Return call status
-
     console.log(`Initiating test call to ${phoneNumber} for session ${sessionId}`)
 
-    // Mock response - in production this would be async
-    return NextResponse.json({
-      success: true,
-      message: 'Test call initiated successfully',
-      callId: `call_${Date.now()}`,
-      status: 'initiated'
-    })
+    try {
+      // Get the active voice provider (Awaz)
+      const voiceProvider = getActiveProvider()
+      
+      // Create a mock business profile for the call
+      const mockProfile = {
+        business_name: 'Funnder Demo Business',
+        business_type: 'AI Solutions',
+        services: ['AI Voice Agents', 'Customer Service Automation'],
+        hours: '9 AM - 5 PM EST',
+        location: 'Demo Location'
+      }
+
+      // Start the call using Awaz
+      const callResult = await voiceProvider.startCall({
+        phone: phoneNumber,
+        profile: mockProfile
+      })
+
+      return NextResponse.json({
+        success: true,
+        message: 'Test call initiated successfully with Awaz',
+        callId: callResult.callId,
+        status: 'initiated',
+        provider: 'awaz'
+      })
+
+    } catch (providerError) {
+      console.error('Voice provider error:', providerError)
+      
+      // Fallback to mock response if provider fails
+      return NextResponse.json({
+        success: true,
+        message: 'Test call initiated (fallback mode)',
+        callId: `call_${Date.now()}`,
+        status: 'initiated',
+        provider: 'mock',
+        warning: 'Voice provider unavailable, using mock response'
+      })
+    }
 
   } catch (error) {
     console.error('Test call POST error:', error)
     return NextResponse.json(
-      { error: 'Failed to initiate test call' },
+      { error: 'Failed to initiate test call', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
