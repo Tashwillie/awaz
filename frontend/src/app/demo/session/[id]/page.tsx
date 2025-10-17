@@ -7,18 +7,13 @@ import { Button } from '@/components/ui/Button'
 import { Logo } from '@/components/ui/Logo'
 import { Phone, MessageCircle, Clock, CheckCircle, XCircle } from 'lucide-react'
 import { getDemoStatus } from '@/lib/api'
+import { BusinessProfile, Call } from '@/types/demo'
 
 interface SessionStatus {
   status: string
   callStatus?: string
-  businessProfile?: Record<string, unknown>
-  call?: {
-    id: string
-    status: string
-    providerCallId: string
-    summary?: string
-    transcriptUrl?: string
-  }
+  businessProfile?: BusinessProfile
+  call?: Call
 }
 
 export default function DemoSessionPage() {
@@ -141,7 +136,7 @@ export default function DemoSessionPage() {
               <div>
                 <label className="text-sm font-medium text-gray-500">Business</label>
                 <p className="text-gray-900">
-                  {sessionStatus.businessProfile?.business_profile?.name || 'Loading...'}
+                  {sessionStatus.businessProfile?.business_profile?.brand_voice || 'Loading...'}
                 </p>
               </div>
 
