@@ -204,14 +204,6 @@ export function AnimatedTrainingFlow({ onComplete, businessName, websiteUrl }: A
             </Button>
           )}
           
-          {/* Temporary skip button for development */}
-          <Button 
-            variant="outline" 
-            onClick={onComplete}
-            className="border-gray-300 text-gray-600 hover:bg-gray-50"
-          >
-            Skip to Preview (temp)
-          </Button>
         </div>
       </div>
     </div>
