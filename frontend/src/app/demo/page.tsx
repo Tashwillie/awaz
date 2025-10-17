@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation' // Temporarily disabled
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -13,11 +13,11 @@ import { AnimatedTrainingFlow } from '@/components/demo/AnimatedTrainingFlow'
 import { VoicePlayer } from '@/components/demo/VoicePlayer'
 import { Search, MapPin, Clock, GraduationCap, Speaker, Trophy, Check, Phone } from 'lucide-react'
 import { searchPlaces, createDemoSession, confirmDemo, startVoiceCall } from '@/lib/api'
-import { loginWithGoogle, loginWithEmail } from '@/lib/auth'
+// import { loginWithGoogle, loginWithEmail } from '@/lib/auth' // Temporarily disabled
 import { DemoFormData } from '@/types/demo'
 
 export default function DemoPage() {
-  const router = useRouter()
+  // const router = useRouter() // Temporarily disabled
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState<DemoFormData>({
     businessName: '',
@@ -36,7 +36,7 @@ export default function DemoPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [sessionId, setSessionId] = useState<string | null>(null)
+  // const [sessionId, setSessionId] = useState<string | null>(null) // Temporarily disabled
   const buildStartedRef = useRef(false)
 
   const debounceRef = useRef<NodeJS.Timeout | null>(null)
@@ -121,7 +121,7 @@ export default function DemoPage() {
       setError(null)
       try {
         const session = await createDemoSession('retell')
-        setSessionId(session.id)
+        // setSessionId(session.id) // Temporarily disabled
         try { localStorage.setItem('funnder_session_id', session.id) } catch {}
         await confirmDemo(
           session.id,
@@ -149,7 +149,7 @@ export default function DemoPage() {
       }
     }
     run()
-  }, [currentStep, selectedBusiness])
+  }, [currentStep, selectedBusiness, formData.visitorName, formData.visitorEmail, formData.visitorPhone, formData.useFirecrawl])
 
   const handleBack = () => {
     if (currentStep > 1) {
@@ -161,14 +161,17 @@ export default function DemoPage() {
   const renderStep1 = () => (
     <div className="grid md:grid-cols-2 gap-12">
       {/* Left Section - Instructions */}
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-semibold text-gray-900 leading-tight mb-2">
+      <div className="space-y-8">
+        <div className="space-y-3">
+          <h1 className="text-4xl font-bold text-gray-900 leading-tight tracking-tight">
             Train Funnder with your
           </h1>
-          <h2 className="text-3xl font-bold text-brand-teal-100 leading-tight">
+          <h2 className="text-4xl font-bold text-brand-teal-100 leading-tight tracking-tight">
             Google Business Profile
           </h2>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Let our AI learn from your business information to create a personalized voice agent.
+          </p>
         </div>
         
         <FeatureList
@@ -199,10 +202,15 @@ export default function DemoPage() {
       </div>
 
       {/* Right Section - Form */}
-      <div className="flex flex-col justify-center space-y-6">
-        <h3 className="text-xl font-semibold text-gray-900 text-center">
-          Find your Google Business Profile
-        </h3>
+      <div className="flex flex-col justify-center space-y-8">
+        <div className="text-center space-y-2">
+          <h3 className="text-2xl font-bold text-gray-900">
+            Find your Google Business Profile
+          </h3>
+          <p className="text-gray-600">
+            Search for your business to get started
+          </p>
+        </div>
 
         <div className="space-y-4">
           <Input
@@ -257,14 +265,17 @@ export default function DemoPage() {
   const renderStep2 = () => (
     <div className="grid md:grid-cols-2 gap-12">
       {/* Left Section - Content (match reference structure) */}
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-semibold text-gray-900 leading-tight mb-2">
+      <div className="space-y-8">
+        <div className="space-y-3">
+          <h1 className="text-4xl font-bold text-gray-900 leading-tight tracking-tight">
             Train Funnder with your
           </h1>
-          <h2 className="text-3xl font-bold text-brand-teal-100 leading-tight">
+          <h2 className="text-4xl font-bold text-brand-teal-100 leading-tight tracking-tight">
             Google Business Profile
           </h2>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Confirm this is your business and we&apos;ll start training your AI agent.
+          </p>
         </div>
 
         <FeatureList
@@ -365,10 +376,15 @@ export default function DemoPage() {
   const renderStep4 = () => (
     <div className="grid md:grid-cols-2 gap-12">
       {/* Left - Preview */}
-      <div className="space-y-6">
-        <h1 className="text-4xl font-semibold text-gray-900 leading-tight">
-          <span className="text-brand-teal-100">Preview</span> {selectedBusiness?.name}&apos;s Custom Agent
-        </h1>
+      <div className="space-y-8">
+        <div className="space-y-3">
+          <h1 className="text-4xl font-bold text-gray-900 leading-tight tracking-tight">
+            <span className="text-brand-teal-100">Preview</span> {selectedBusiness?.name}&apos;s Custom Agent
+          </h1>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Listen to how your AI agent will sound when answering customer calls.
+          </p>
+        </div>
         <FeatureList
           features={[
             { icon: <GraduationCap className="w-6 h-6" />, text: 'Funnder has been trained on your data.' },
@@ -379,8 +395,11 @@ export default function DemoPage() {
       </div>
 
       {/* Right - Samples & CTA */}
-      <div className="space-y-6">
-        <h3 className="text-xl font-semibold text-gray-900">Listen to a few examples below&hellip;</h3>
+      <div className="space-y-8">
+        <div className="space-y-2">
+          <h3 className="text-2xl font-bold text-gray-900">Listen to a few examples below&hellip;</h3>
+          <p className="text-gray-600">Click the play buttons to hear your AI agent in action</p>
+        </div>
         <div className="space-y-3">
           <VoicePlayer
             title="Greeting"
@@ -417,10 +436,15 @@ export default function DemoPage() {
       case 5:
         return (
           <div className="grid md:grid-cols-2 gap-12">
-            <div className="space-y-6">
-              <h1 className="text-4xl font-semibold text-gray-900 leading-tight">
-                <span className="text-brand-teal-100">Claim</span> {selectedBusiness?.name}'s Custom Agent.
-              </h1>
+            <div className="space-y-8">
+              <div className="space-y-3">
+                <h1 className="text-4xl font-bold text-gray-900 leading-tight tracking-tight">
+                  <span className="text-brand-teal-100">Claim</span> {selectedBusiness?.name}&apos;s Custom Agent
+                </h1>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Your AI agent is ready! Create your account to start using Funnder for your business.
+                </p>
+              </div>
               <FeatureList
                 features={[
                   { icon: <Phone className="w-6 h-6" />, text: 'Grow your business while Funnder answers calls 24/7.' },
@@ -429,9 +453,11 @@ export default function DemoPage() {
                 ]}
               />
             </div>
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-gray-900">Create Your Account</h3>
-              <p className="text-gray-600">Free for 7 days</p>
+            <div className="space-y-8">
+              <div className="space-y-2">
+                <h3 className="text-3xl font-bold text-gray-900">Create Your Account</h3>
+                <p className="text-xl text-gray-600">Free for 7 days, then $99/month</p>
+              </div>
               <Button className="w-full" size="lg">Continue with Google</Button>
               <div className="text-center text-gray-400">or</div>
               <Button className="w-full" variant="outline" size="lg">Continue with Email</Button>

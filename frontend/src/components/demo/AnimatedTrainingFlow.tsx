@@ -114,10 +114,15 @@ export function AnimatedTrainingFlow({ onComplete, businessName, websiteUrl }: A
   return (
     <div className="grid md:grid-cols-2 gap-12">
       {/* Left - Building copy */}
-      <div className="space-y-6">
-        <h1 className="text-4xl font-semibold text-gray-900 leading-tight">
-          Building your <span className="text-brand-teal-100">Funnder Agent</span>
-        </h1>
+      <div className="space-y-8">
+        <div className="space-y-3">
+          <h1 className="text-4xl font-bold text-gray-900 leading-tight tracking-tight">
+            Building your <span className="text-brand-teal-100">Funnder Agent</span>
+          </h1>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Our AI is analyzing your business data to create a personalized voice agent.
+          </p>
+        </div>
         
         <div className="space-y-4">
           <div className="flex items-start space-x-3">
@@ -144,8 +149,11 @@ export function AnimatedTrainingFlow({ onComplete, businessName, websiteUrl }: A
       </div>
 
       {/* Right - Progress */}
-      <div className="space-y-6">
-        <h3 className="text-xl font-semibold text-gray-900">Funnder is training on your data</h3>
+      <div className="space-y-8">
+        <div className="space-y-2">
+          <h3 className="text-2xl font-bold text-gray-900">Funnder is training on your data</h3>
+          <p className="text-gray-600">This process typically takes 30-60 seconds</p>
+        </div>
         
         {/* Animated Progress Bar */}
         <AnimatedProgressBar 
