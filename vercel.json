@@ -4,7 +4,6 @@
   "installCommand": "cd frontend && npm install",
   "framework": "nextjs",
   "outputDirectory": "frontend/.next",
-  "rootDirectory": "frontend",
   "env": {
     "NODE_ENV": "production"
   },
