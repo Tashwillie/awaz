@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Loader2 } from 'lucide-react'
 import { 
   getCallForwardingConfig, 
@@ -13,8 +13,8 @@ interface AnswerCallsStepProps {
 }
 
 export function AnswerCallsStep({ sessionId }: AnswerCallsStepProps) {
-  const [forwardingConfig, setForwardingConfig] = useState<any>(null)
-  const [phoneNumber, setPhoneNumber] = useState<any>(null)
+  const [forwardingConfig, setForwardingConfig] = useState<Record<string, unknown> | null>(null)
+  const [phoneNumber, setPhoneNumber] = useState<Record<string, unknown> | null>(null)
   const [selectedOption, setSelectedOption] = useState<'forward' | 'use_funnder'>('forward')
   const [phoneSystemType, setPhoneSystemType] = useState<'mobile' | 'voip' | 'pstn' | 'landline'>('mobile')
   const [provider, setProvider] = useState('verizon')
@@ -26,9 +26,9 @@ export function AnswerCallsStep({ sessionId }: AnswerCallsStepProps) {
     if (sessionId) {
       loadData()
     }
-  }, [sessionId])
+  }, [sessionId, loadData])
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (!sessionId) return
     
     try {
@@ -45,7 +45,7 @@ export function AnswerCallsStep({ sessionId }: AnswerCallsStepProps) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [sessionId])
 
   const handleConfigureForwarding = async () => {
     if (!sessionId || !userPhoneNumber) return
@@ -94,9 +94,9 @@ export function AnswerCallsStep({ sessionId }: AnswerCallsStepProps) {
       </div>
       
       <div className="rounded-xl border border-yellow-200 bg-yellow-50 text-yellow-800 text-sm p-3 mb-5">
-        Funnder will not answer calls from external numbers until you've started your free trial. 
+        Funnder will not answer calls from external numbers until you&apos;ve started your free trial. 
         If external callers attempt to reach your agent, they will hear an automated message 
-        indicating they can't be connected. Start free trial by completing setup and adding a credit card.
+        indicating they can&apos;t be connected. Start free trial by completing setup and adding a credit card.
       </div>
       
       {error && (
@@ -126,7 +126,7 @@ export function AnswerCallsStep({ sessionId }: AnswerCallsStepProps) {
           }`}
         >
           <div className="font-semibold text-gray-900">Use Funnder Number</div>
-          <div className="text-sm text-gray-600">Share the agent's number as your new business line.</div>
+          <div className="text-sm text-gray-600">Share the agent&apos;s number as your new business line.</div>
         </button>
       </div>
       
@@ -135,7 +135,7 @@ export function AnswerCallsStep({ sessionId }: AnswerCallsStepProps) {
           <label className="block text-sm text-gray-600 mb-1">Phone System Type</label>
           <select 
             value={phoneSystemType}
-            onChange={(e) => setPhoneSystemType(e.target.value as any)}
+            onChange={(e) => setPhoneSystemType(e.target.value as 'mobile' | 'voip' | 'pstn' | 'landline')}
             className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-brand-teal-100 focus:border-transparent"
           >
             <option value="mobile">Mobile</option>
