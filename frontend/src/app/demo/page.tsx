@@ -396,11 +396,8 @@ export default function DemoPage() {
           />
         </div>
         <div className="space-y-3">
-          <Button className="w-full" size="lg" onClick={() => { loginWithGoogle() }}>
-            Continue with Google
-          </Button>
-          <Button className="w-full" variant="outline" size="lg" onClick={() => { loginWithEmail() }}>
-            Continue with Email
+          <Button className="w-full" size="lg" onClick={() => setCurrentStep(5)}>
+            Continue
           </Button>
         </div>
       </div>
